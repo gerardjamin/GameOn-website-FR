@@ -307,7 +307,8 @@ form.addEventListener("submit", (event) => {
 });
 
 /**
- * cette fonction affiche le message d'erreur passé en paramètre et selectionne l'element HTML parent.
+ * cette fonction affiche le message d'erreur passé en paramètre 
+ * et selectionne l'element HTML parent(formData du champs en erreur).
  *
  * @param {string} message
  */

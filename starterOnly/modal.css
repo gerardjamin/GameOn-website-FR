@@ -219,7 +219,7 @@ input {
   font-size: 18px;
   height: 48px;
 }
-/*gestion des erreurs************************************/
+/*gestion des erreurs: l'attribut data-error et data-error-isible seront créés si une erreur survient dans le champs*/
 .formData[data-error]::after {
   content: attr(data-error);
   font-size: 0.625em;
@@ -238,12 +238,12 @@ input {
 .formData[data-error-visible="true"] .text-control {
   border: 2px solid #e54858;
 }
-
-input[data-error]::after {
+/*not used*/
+/* input[data-error]::after {
   content: attr(data-error);
   font-size: 0.625em;
   color: red;
-}
+} */
 /**********************************boutons radios*********************/
 .checkbox-label,
 .checkbox2-label {
@@ -326,7 +326,7 @@ input[data-error]::after {
 .close:after {
   position: absolute;
   left: 15px;
-  content: " ";
+  content: "";
   height: 33px;
   width: 3px;
   background-color: #fff;
