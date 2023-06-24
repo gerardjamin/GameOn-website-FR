@@ -303,7 +303,10 @@ form.addEventListener("submit", (event) => {
   } catch (erreur) {
     console.log(erreur.message);
     afficherMessageError(erreur.message);
+  }finally{
+    /*not used here*/
   }
+  
 });
 
 /**
