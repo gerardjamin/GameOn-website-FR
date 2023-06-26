@@ -28,7 +28,7 @@ const messageError = [
 "#2:Entrer au moins 2 caractères.",
 "#3:L'adresse email n'est pas valide.",
 "#4:La réponse est obligatoire.",
-"#5:Veuillez respecter le format de date (jj/mm/aaaa).",
+"#5:Veuillez respecter le format de la date.",
 "#6:Vous devez choisir une option.",
 "#7:Vous devez acceptez les conditions d'utilisation."
 ]
