@@ -8,6 +8,7 @@ function editNav() {
   }
 }
 
+/*efface le contenu d'un champs*/
 function effacerChamp() {
   document.getElementById("birthdate").value = "";
 }
@@ -20,6 +21,17 @@ const modalbg = document.querySelector(".bground");
 const modalBtn = document.querySelectorAll(".modal-btn");
 const formData = document.querySelectorAll(".formData");
 const modalClose = document.querySelector(".close");
+const recordError = [];
+for(let i =0;i<7;i++){ recordError[i] ="";}
+const messageError = [
+"#1:Entrer au moins 2 caractères.",
+"#2:Entrer au moins 2 caractères.",
+"#3:L'adresse email n'est pas valide.",
+"#4:La réponse est obligatoire.",
+"#5:Respecter le format de date.",
+"#6:Vous devez choisir une option.",
+"#7:Vous devez acceptez les conditions d'utilisation."
+]
 
 /**
  * close message box
@@ -109,12 +121,13 @@ function validerNom(nom) {
   }
 
   let resultat = longueur && estValide;
-
   if (!resultat) {
-    throw new Error("#1:Entrer au moins 2 caractères.");
+    recordError[0] = messageError[0];
   } else {
-    return resultat;
+   recordError[0] = "";
+    resultat = true;
   }
+  return resultat;
 }
 
 /**
@@ -133,10 +146,13 @@ function validerPrenom(prenom) {
   let resultat = longueur && estValide;
 
   if (!resultat) {
-    throw new Error("#2:Entrer au moins 2 caractères.");
+    recordError[1] = messageError[1];
+
   } else {
-    return resultat;
+    resultat = true;
+    recordError[1] = "";
   }
+  return resultat;
 }
 
 /**
@@ -148,9 +164,10 @@ function validerEmail(email) {
   let valid = false;
   let emailRegExp = new RegExp("[a-z0-9._-]+@[a-z0-9._-]+\\.[a-z0-9._-]+");
   if (!emailRegExp.test(email)) {
-    throw new Error("#3:L'adresse email n'est pas valide.");
+    recordError[2] = messageError[2];
   } else {
     valid = true;
+    recordError[2] = "";
   }
   return valid;
 }
@@ -163,9 +180,10 @@ function validerEmail(email) {
 function validerQuantity(quantity) {
   let valid = false;
   if (quantity === "") {
-    throw new Error("#4:La réponse est obligatoire.");
+    recordError[3] = messageError[3];
   } else {
     valid = true;
+    recordError[3] = "";
   }
   return valid;
 }
@@ -177,32 +195,32 @@ function validerQuantity(quantity) {
  */
 function validerBirthday(birthday) {
   let valid = true;
-  const message = "#5:Respecter le format de date.";
   const dateAujourdhui = new Date();
   // Analyser la date saisie
   const [jour, mois, annee] = birthday.split("/").map(Number);
   if ([jour] <= 0 || [jour] > 31) {
-    throw new Error(message);
+    recordError[4] = messageError[4];
   }
   if ([mois] <= 0 || [mois] > 12) {
-    throw new Error(message);
+    recordError[4] = messageError[4];
   }
 
   // Créer un objet date à partir de la date saisie
   if ((isNaN([jour]) || isNaN([mois]) || isNaN([annee])) === true) {
     valid = false;
-    throw new Error(message);
+    recordError[4] = messageError[4];
   } else {
     const dateSaisieObj = new Date(annee, mois, jour);
     // Comparer la date saisie avec la date du jour
     if (dateSaisieObj > dateAujourdhui) {
       valid = false;
-      throw new Error(message);
+      recordError[4] = messageError[4];
     } else {
       valid = true;
-    }
+      recordError[4] = "";
   }
   return valid;
+}
 }
 
 /**
@@ -220,8 +238,8 @@ function validerButtonsRadio(listeBtnRadio) {
     }
   }
   if (!valid) {
-    throw new Error("#6: Vous devez choisir une option.");
-  }
+    recordError[5] = messageError[5];
+  }else {recordError[5] = "";}
   return valid;
 }
 
@@ -233,8 +251,9 @@ function validerButtonsRadio(listeBtnRadio) {
 function validerButtonCondition(conditionUtilisation) {
   let valid = false;
   if (!conditionUtilisation.checked) {
-    throw new Error("#7:Vous devez acceptez les conditions d'utilisation.");
+    recordError[6] = messageError[6];
   } else {
+    recordError[6] = "";
     valid = true;
   }
   return valid;
@@ -250,41 +269,35 @@ form.addEventListener("submit", (event) => {
   //avoid re-load web page
   event.preventDefault();
 
-  try {
+    let validationItem = [];
+
     let balisePrenom = document.getElementById("first");
     let prenom = balisePrenom.value;
-    let validPrenom = validerPrenom(prenom);
+    validationItem[0] = validerPrenom(prenom);
 
     let baliseNom = document.getElementById("last");
     let nom = baliseNom.value;
-    let validName = validerNom(nom);
+    validationItem[1] = validerNom(nom);
 
     let baliseEmail = document.getElementById("email");
     let email = baliseEmail.value;
-    let validEmail = validerEmail(email);
+    validationItem[2] = validerEmail(email);
 
     let baliseBirthday = document.getElementById("birthdate");
     let birthdate = baliseBirthday.value;
-    let validBirthday = validerBirthday(birthdate);
+    validationItem[3] = validerBirthday(birthdate);
 
     let baliseQuantity = document.getElementById("quantity");
     let quantity = baliseQuantity.value;
-    let validQuantity = validerQuantity(quantity);
+    validationItem[4] = validerQuantity(quantity); 
 
     let listeBtnRadio = document.getElementsByName("location");
-    let validButtonRadio = validerButtonsRadio(listeBtnRadio);
+    validationItem[5] = validerButtonsRadio(listeBtnRadio);
 
     let conditionUtilisation = document.getElementById("checkbox1");
-    let validBtnCondition = validerButtonCondition(conditionUtilisation);
+    validationItem[6] = validerButtonCondition(conditionUtilisation);
 
-    let formValid =
-      validName &&
-      validPrenom &&
-      validEmail &&
-      validQuantity &&
-      validBirthday &&
-      validButtonRadio &&
-      validBtnCondition;
+    const formValid = validationItem.every((element) => element);
 
     if (formValid) {
       //all field are correct
@@ -296,17 +309,16 @@ form.addEventListener("submit", (event) => {
       //Efface les messges d'erreurs
       errorButtonCondition.setAttribute("data-error-visible", "false");
       errorButtonCondition.setAttribute("data-error", " ");
-
+      
       //#4:envoie la confirmation de l'envoie 
       sendMessage();
-    }
-  } catch (erreur) {
-    console.log(erreur.message);
-    afficherMessageError(erreur.message);
-  }finally{
-    /*not used here*/
-  }
+    }else{
   
+    for(let j=0;j<7;j++){
+    afficherMessageError(recordError[j],validationItem[1],validationItem[0],validationItem[2],validationItem[4],validationItem[3],validationItem[5],validationItem[6]);
+  }
+  }
+
 });
 
 /**
@@ -315,7 +327,8 @@ form.addEventListener("submit", (event) => {
  *
  * @param {string} message
  */
-function afficherMessageError(message) {
+function afficherMessageError(message,validName,validPrenom,validEmail,validQuantity,validBirthday,validButtonRadio,validBtnCondition) {
+ 
   /*recupère le numero de l'erreur*/
   let firstTwoCaractere = message.substring(0, 2);
 
@@ -325,8 +338,10 @@ function afficherMessageError(message) {
     /*recupère le message d'erreur seulement*/
     errorNom.setAttribute("data-error", message.substring(3));
   } else {
+    if(validName === true){
     errorNom.removeAttribute("data-error-visible");
     errorNom.removeAttribute("data-error");
+    }
   }
 
   if (firstTwoCaractere === "#2") {
@@ -334,8 +349,10 @@ function afficherMessageError(message) {
     errorPrenom.setAttribute("data-error-visible", "true");
     errorPrenom.setAttribute("data-error", message.substring(3));
   } else {
-    errorPrenom.removeAttribute("data-error-visible");
-    errorPrenom.removeAttribute("data-error");
+    if(validPrenom === true){
+      errorPrenom.removeAttribute("data-error-visible");
+      errorPrenom.removeAttribute("data-error");
+      }
   }
 
   if (firstTwoCaractere === "#3") {
@@ -343,8 +360,10 @@ function afficherMessageError(message) {
     errorEmail.setAttribute("data-error-visible", "true");
     errorEmail.setAttribute("data-error", message.substring(3));
   } else {
-    errorEmail.removeAttribute("data-error-visible");
-    errorEmail.removeAttribute("data-error");
+    if(validEmail === true){
+      errorEmail.removeAttribute("data-error-visible");
+      errorEmail.removeAttribute("data-error");
+      }
   }
 
   if (firstTwoCaractere === "#4") {
@@ -352,8 +371,10 @@ function afficherMessageError(message) {
     errorQuantity.setAttribute("data-error-visible", "true");
     errorQuantity.setAttribute("data-error", message.substring(3));
   } else {
-    errorQuantity.removeAttribute("data-error-visible");
-    errorQuantity.removeAttribute("data-error");
+    if(validQuantity === true){
+      errorQuantity.removeAttribute("data-error-visible");
+      errorQuantity.removeAttribute("data-error");
+      }
   }
 
   if (firstTwoCaractere === "#5") {
@@ -361,8 +382,10 @@ function afficherMessageError(message) {
     errorBirthday.setAttribute("data-error-visible", "true");
     errorBirthday.setAttribute("data-error", message.substring(3));
   } else {
-    errorBirthday.removeAttribute("data-error-visible");
-    errorBirthday.removeAttribute("data-error");
+    if(validBirthday === true){
+      errorBirthday.removeAttribute("data-error-visible");
+      errorBirthday.removeAttribute("data-error");
+      }
   }
 
   if (firstTwoCaractere === "#6") {
@@ -370,8 +393,10 @@ function afficherMessageError(message) {
     errorButtonRadio.setAttribute("data-error-visible", "true");
     errorButtonRadio.setAttribute("data-error", message.substring(3));
   } else {
-    errorButtonRadio.removeAttribute("data-error-visible");
-    errorButtonRadio.removeAttribute("data-error");
+    if(validButtonRadio === true){
+      errorButtonRadio.removeAttribute("data-error-visible");
+      errorButtonRadio.removeAttribute("data-error");
+      }
   }
 
   if (firstTwoCaractere === "#7") {
@@ -379,8 +404,10 @@ function afficherMessageError(message) {
     errorButtonCondition.setAttribute("data-error-visible", "true");
     errorButtonCondition.setAttribute("data-error", message.substring(3));
   } else {
-    errorButtonCondition.removeAttribute("data-error-visible");
-    errorButtonCondition.removeAttribute("data-error");
+    if(validBtnCondition === true){
+      errorButtonCondition.removeAttribute("data-error-visible");
+      errorButtonCondition.removeAttribute("data-error");
+      }
   }
 }
 
