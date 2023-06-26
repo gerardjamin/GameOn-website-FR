@@ -28,7 +28,7 @@ const messageError = [
 "#2:Entrer au moins 2 caractères.",
 "#3:L'adresse email n'est pas valide.",
 "#4:La réponse est obligatoire.",
-"#5:Respecter le format de date.",
+"#5:Veuillez respecter le format de date (jj/mm/aaaa).",
 "#6:Vous devez choisir une option.",
 "#7:Vous devez acceptez les conditions d'utilisation."
 ]
@@ -114,7 +114,7 @@ function sendMessage() {
 function validerNom(nom) {
   let longueur = false;
 
-  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ\s(--)]+$/;
+  const regex = /^[A-Za-z][a-zA-ZÀ-ÖØ-öø-ÿ\s(--)]+$/;
   const estValide = regex.test(nom);
   if (nom.length > 1) {
     longueur = true;
@@ -137,7 +137,7 @@ function validerNom(nom) {
  */
 function validerPrenom(prenom) {
   let longueur = false;
-  const regex = /^[a-zA-ZÀ-ÖØ-öø-ÿ\s(--)]+$/;
+  const regex = /^[A-Za-z][a-zA-ZÀ-ÖØ-öø-ÿ\s(--)]+$/;
   const estValide = regex.test(prenom);
   if (prenom.length > 1) {
     longueur = true;
@@ -196,13 +196,17 @@ function validerQuantity(quantity) {
 function validerBirthday(birthday) {
   let valid = true;
   const dateAujourdhui = new Date();
-  // Analyser la date saisie
+  //Analyser la date saisie
   const [jour, mois, annee] = birthday.split("/").map(Number);
   if ([jour] <= 0 || [jour] > 31) {
     recordError[4] = messageError[4];
+    valid = false;
+    return valid;
   }
   if ([mois] <= 0 || [mois] > 12) {
     recordError[4] = messageError[4];
+    valid = false;
+    return valid;
   }
 
   // Créer un objet date à partir de la date saisie
@@ -210,7 +214,7 @@ function validerBirthday(birthday) {
     valid = false;
     recordError[4] = messageError[4];
   } else {
-    const dateSaisieObj = new Date(annee, mois, jour);
+    const dateSaisieObj = new Date(annee, (mois -1), jour);
     // Comparer la date saisie avec la date du jour
     if (dateSaisieObj > dateAujourdhui) {
       valid = false;
