@@ -43,6 +43,7 @@ img {
 .header-logo {
   float: left;
 }
+
 .main-navbar {
   float: right;
 }
@@ -491,6 +492,8 @@ footer {
   padding-right: 2vw;
   margin: 0 20px;
 }
+
+
 @media screen and (max-width: 800px) {
   .hero-section {
     display: block;
@@ -532,6 +535,31 @@ footer {
     text-align: center;
   }
 }
+
+@media screen and (max-width: 350px) {
+  .topnav a {
+    display: none;
+  }
+  .topnav a.icon {
+    float: right;
+    display: block;
+  }
+  .header-logo {
+   width:200px;
+   padding-top: 10px;
+  }
+  .hero-headline {
+    font-size: 30px;
+    text-align: left;
+  }
+  .hero-text {
+    width: 250px;
+    text-align: left;
+    padding-right: 0px;
+    right: 0px;
+    left: 0px;
+  }
+  }
 
 #message h2 {
   width: 100%;
