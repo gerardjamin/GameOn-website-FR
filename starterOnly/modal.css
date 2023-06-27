@@ -75,45 +75,7 @@ img {
   display: none;
 }
 
-@media screen and (max-width: 768px) {
-  .topnav a {
-    display: none;
-  }
-  /* burger */
-  .topnav a.icon {
-    float: right;
-    display: block;
-  }
-}
 
-/* affichage du menu */
-@media screen and (max-width: 768px) {
-  .topnav.responsive {
-    position: relative;
-  }
-  /* burger */
-  .topnav.responsive a.icon {
-    position: absolute;
-    right: 0;
-    top: 0;
-  }
-  .topnav.responsive a {
-    float: none;
-    display: block;
-    text-align: left;
-  }
-}
-
-/* not necessary ! */
-@media screen and (max-width: 540px) {
-  .topnav a {
-    display: none;
-  }
-  .topnav a.icon {
-    float: right;
-    display: block;
-  }
-}
 
 main {
   font-size: 130%;
@@ -493,8 +455,30 @@ footer {
   margin: 0 20px;
 }
 
-
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 834px) {
+  /* affichage du menu */
+  .topnav a {
+    display: none;
+  }
+  /* burger */
+  .topnav a.icon {
+    float: right;
+    display: block;
+  }
+  .topnav.responsive {
+    position: relative;
+  }
+  /* burger */
+  .topnav.responsive a.icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .topnav.responsive a {
+    float: none;
+    display: block;
+    text-align: left;
+  }
   .hero-section {
     display: block;
     box-shadow: unset;
@@ -536,7 +520,7 @@ footer {
   }
 }
 
-@media screen and (max-width: 350px) {
+@media screen and (max-width: 540px) {
   .topnav a {
     display: none;
   }
@@ -558,6 +542,7 @@ footer {
     padding-right: 0px;
     right: 0px;
     left: 0px;
+    font-size: 11px;
   }
   }
 
