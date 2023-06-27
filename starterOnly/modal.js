@@ -22,16 +22,18 @@ const modalBtn = document.querySelectorAll(".modal-btn");
 const formData = document.querySelectorAll(".formData");
 const modalClose = document.querySelector(".close");
 const recordError = [];
-for(let i =0;i<7;i++){ recordError[i] ="";}
+for (let i = 0; i < 7; i++) {
+  recordError[i] = "";
+}
 const messageError = [
-"#1:Entrer au moins 2 caractères.",
-"#2:Entrer au moins 2 caractères.",
-"#3:L'adresse email n'est pas valide.",
-"#4:La réponse est obligatoire.",
-"#5:Veuillez respecter le format de la date.",
-"#6:Vous devez choisir une option.",
-"#7:Vous devez acceptez les conditions d'utilisation."
-]
+  "#1:Entrer au moins 2 caractères.",
+  "#2:Entrer au moins 2 caractères.",
+  "#3:L'adresse email n'est pas valide.",
+  "#4:La réponse est obligatoire.",
+  "#5:Veuillez entrer une date valide.",
+  "#6:Vous devez choisir une option.",
+  "#7:Vous devez acceptez les conditions d'utilisation.",
+];
 
 /**
  * close message box
@@ -76,14 +78,14 @@ function initModal() {
   let baliseQuantity = document.getElementById("quantity");
   baliseQuantity.value = "";
 
-  initBirthday = document.getElementById("birthdate");
-  initBirthday.value = "jj/mm/aaaa";
+  // initBirthday = document.getElementById("birthdate");
+  // initBirthday.value = "jj/mm/aaaa";
 
   let listeBtnRadio = document.getElementsByName("location");
   for (let index = 0; index < listeBtnRadio.length; index++) {
     listeBtnRadio[index].checked = false;
-    }
-  
+  }
+
   let conditionUtilisation = document.getElementById("checkbox1");
   conditionUtilisation.checked = false;
 }
@@ -124,7 +126,7 @@ function validerNom(nom) {
   if (!resultat) {
     recordError[0] = messageError[0];
   } else {
-   recordError[0] = "";
+    recordError[0] = "";
     resultat = true;
   }
   return resultat;
@@ -147,7 +149,6 @@ function validerPrenom(prenom) {
 
   if (!resultat) {
     recordError[1] = messageError[1];
-
   } else {
     resultat = true;
     recordError[1] = "";
@@ -196,35 +197,17 @@ function validerQuantity(quantity) {
 function validerBirthday(birthday) {
   let valid = true;
   const dateAujourdhui = new Date();
-  //Analyser la date saisie
-  const [jour, mois, annee] = birthday.split("/").map(Number);
-  if ([jour] <= 0 || [jour] > 31) {
-    recordError[4] = messageError[4];
-    valid = false;
-    return valid;
-  }
-  if ([mois] <= 0 || [mois] > 12) {
-    recordError[4] = messageError[4];
-    valid = false;
-    return valid;
-  }
+  const timestamp = dateAujourdhui.getTime();
+  const birthdayObj = new Date(birthday);
 
-  // Créer un objet date à partir de la date saisie
-  if ((isNaN([jour]) || isNaN([mois]) || isNaN([annee])) === true) {
+  if (birthdayObj > dateAujourdhui || isNaN(birthdayObj)) {
     valid = false;
     recordError[4] = messageError[4];
   } else {
-    const dateSaisieObj = new Date(annee, (mois -1), jour);
-    // Comparer la date saisie avec la date du jour
-    if (dateSaisieObj > dateAujourdhui) {
-      valid = false;
-      recordError[4] = messageError[4];
-    } else {
-      valid = true;
-      recordError[4] = "";
+    valid = true;
+    recordError[4] = "";
   }
   return valid;
-}
 }
 
 /**
@@ -243,7 +226,9 @@ function validerButtonsRadio(listeBtnRadio) {
   }
   if (!valid) {
     recordError[5] = messageError[5];
-  }else {recordError[5] = "";}
+  } else {
+    recordError[5] = "";
+  }
   return valid;
 }
 
@@ -273,66 +258,73 @@ form.addEventListener("submit", (event) => {
   //avoid re-load web page
   event.preventDefault();
 
-    let validationItem = [];
+  let validationItem = [];
 
-    let balisePrenom = document.getElementById("first");
-    let prenom = balisePrenom.value;
-    validationItem[0] = validerPrenom(prenom);
+  let balisePrenom = document.getElementById("first");
+  let prenom = balisePrenom.value;
+  validationItem[0] = validerPrenom(prenom);
 
-    let baliseNom = document.getElementById("last");
-    let nom = baliseNom.value;
-    validationItem[1] = validerNom(nom);
+  let baliseNom = document.getElementById("last");
+  let nom = baliseNom.value;
+  validationItem[1] = validerNom(nom);
 
-    let baliseEmail = document.getElementById("email");
-    let email = baliseEmail.value;
-    validationItem[2] = validerEmail(email);
+  let baliseEmail = document.getElementById("email");
+  let email = baliseEmail.value;
+  validationItem[2] = validerEmail(email);
 
-    let baliseBirthday = document.getElementById("birthdate");
-    let birthdate = baliseBirthday.value;
-    validationItem[3] = validerBirthday(birthdate);
+  let baliseBirthday = document.getElementById("birthdate");
+  let birthdate = baliseBirthday.value;
+  validationItem[3] = validerBirthday(birthdate);
 
-    let baliseQuantity = document.getElementById("quantity");
-    let quantity = baliseQuantity.value;
-    validationItem[4] = validerQuantity(quantity); 
+  let baliseQuantity = document.getElementById("quantity");
+  let quantity = baliseQuantity.value;
+  validationItem[4] = validerQuantity(quantity);
 
-    let listeBtnRadio = document.getElementsByName("location");
-    validationItem[5] = validerButtonsRadio(listeBtnRadio);
+  let listeBtnRadio = document.getElementsByName("location");
+  validationItem[5] = validerButtonsRadio(listeBtnRadio);
 
-    let conditionUtilisation = document.getElementById("checkbox1");
-    validationItem[6] = validerButtonCondition(conditionUtilisation);
+  let conditionUtilisation = document.getElementById("checkbox1");
+  validationItem[6] = validerButtonCondition(conditionUtilisation);
 
-    const formValid = validationItem.every((element) => element);
+  //ET logique entre toutes les validations
+  const formValid = validationItem.every((element) => element);
 
-    if (formValid) {
-      //all field are correct
-
-      //because the last!
-      let errorButtonCondition = document.getElementById(
-        "errorButtonCondition"
+  if (formValid) {
+    //all field are correct
+    //#4:envoie la confirmation de l'envoie
+    sendMessage();
+  } else {
+    for (let j = 0; j < 7; j++) {
+      afficherMessageError(
+        recordError[j],
+        validationItem[1],
+        validationItem[0],
+        validationItem[2],
+        validationItem[4],
+        validationItem[3],
+        validationItem[5],
+        validationItem[6]
       );
-      //Efface les messges d'erreurs
-      errorButtonCondition.setAttribute("data-error-visible", "false");
-      errorButtonCondition.setAttribute("data-error", " ");
-      
-      //#4:envoie la confirmation de l'envoie 
-      sendMessage();
-    }else{
-  
-    for(let j=0;j<7;j++){
-    afficherMessageError(recordError[j],validationItem[1],validationItem[0],validationItem[2],validationItem[4],validationItem[3],validationItem[5],validationItem[6]);
+    }
   }
-  }
-
 });
 
 /**
- * cette fonction affiche le message d'erreur passé en paramètre 
+ * cette fonction affiche le message d'erreur passé en paramètre
  * et selectionne l'element HTML parent(formData du champs en erreur).
  *
  * @param {string} message
  */
-function afficherMessageError(message,validName,validPrenom,validEmail,validQuantity,validBirthday,validButtonRadio,validBtnCondition) {
- 
+function afficherMessageError(
+  message,
+  validName,
+  validPrenom,
+  validEmail,
+  validQuantity,
+  validBirthday,
+  validButtonRadio,
+  validBtnCondition
+) {
   /*recupère le numero de l'erreur*/
   let firstTwoCaractere = message.substring(0, 2);
 
@@ -342,9 +334,9 @@ function afficherMessageError(message,validName,validPrenom,validEmail,validQuan
     /*recupère le message d'erreur seulement*/
     errorNom.setAttribute("data-error", message.substring(3));
   } else {
-    if(validName === true){
-    errorNom.removeAttribute("data-error-visible");
-    errorNom.removeAttribute("data-error");
+    if (validName === true) {
+      errorNom.removeAttribute("data-error-visible");
+      errorNom.removeAttribute("data-error");
     }
   }
 
@@ -353,10 +345,10 @@ function afficherMessageError(message,validName,validPrenom,validEmail,validQuan
     errorPrenom.setAttribute("data-error-visible", "true");
     errorPrenom.setAttribute("data-error", message.substring(3));
   } else {
-    if(validPrenom === true){
+    if (validPrenom === true) {
       errorPrenom.removeAttribute("data-error-visible");
       errorPrenom.removeAttribute("data-error");
-      }
+    }
   }
 
   if (firstTwoCaractere === "#3") {
@@ -364,10 +356,10 @@ function afficherMessageError(message,validName,validPrenom,validEmail,validQuan
     errorEmail.setAttribute("data-error-visible", "true");
     errorEmail.setAttribute("data-error", message.substring(3));
   } else {
-    if(validEmail === true){
+    if (validEmail === true) {
       errorEmail.removeAttribute("data-error-visible");
       errorEmail.removeAttribute("data-error");
-      }
+    }
   }
 
   if (firstTwoCaractere === "#4") {
@@ -375,10 +367,10 @@ function afficherMessageError(message,validName,validPrenom,validEmail,validQuan
     errorQuantity.setAttribute("data-error-visible", "true");
     errorQuantity.setAttribute("data-error", message.substring(3));
   } else {
-    if(validQuantity === true){
+    if (validQuantity === true) {
       errorQuantity.removeAttribute("data-error-visible");
       errorQuantity.removeAttribute("data-error");
-      }
+    }
   }
 
   if (firstTwoCaractere === "#5") {
@@ -386,10 +378,10 @@ function afficherMessageError(message,validName,validPrenom,validEmail,validQuan
     errorBirthday.setAttribute("data-error-visible", "true");
     errorBirthday.setAttribute("data-error", message.substring(3));
   } else {
-    if(validBirthday === true){
+    if (validBirthday === true) {
       errorBirthday.removeAttribute("data-error-visible");
       errorBirthday.removeAttribute("data-error");
-      }
+    }
   }
 
   if (firstTwoCaractere === "#6") {
@@ -397,10 +389,10 @@ function afficherMessageError(message,validName,validPrenom,validEmail,validQuan
     errorButtonRadio.setAttribute("data-error-visible", "true");
     errorButtonRadio.setAttribute("data-error", message.substring(3));
   } else {
-    if(validButtonRadio === true){
+    if (validButtonRadio === true) {
       errorButtonRadio.removeAttribute("data-error-visible");
       errorButtonRadio.removeAttribute("data-error");
-      }
+    }
   }
 
   if (firstTwoCaractere === "#7") {
@@ -408,10 +400,10 @@ function afficherMessageError(message,validName,validPrenom,validEmail,validQuan
     errorButtonCondition.setAttribute("data-error-visible", "true");
     errorButtonCondition.setAttribute("data-error", message.substring(3));
   } else {
-    if(validBtnCondition === true){
+    if (validBtnCondition === true) {
       errorButtonCondition.removeAttribute("data-error-visible");
       errorButtonCondition.removeAttribute("data-error");
-      }
+    }
   }
 }
 
