@@ -78,9 +78,6 @@ function initModal() {
   let baliseQuantity = document.getElementById("quantity");
   baliseQuantity.value = "";
 
-  // initBirthday = document.getElementById("birthdate");
-  // initBirthday.value = "jj/mm/aaaa";
-
   let listeBtnRadio = document.getElementsByName("location");
   for (let index = 0; index < listeBtnRadio.length; index++) {
     listeBtnRadio[index].checked = false;
