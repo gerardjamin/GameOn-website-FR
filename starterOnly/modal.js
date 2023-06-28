@@ -21,10 +21,17 @@ const modalbg = document.querySelector(".bground");
 const modalBtn = document.querySelectorAll(".modal-btn");
 const formData = document.querySelectorAll(".formData");
 const modalClose = document.querySelector(".close");
+/*initialisation du tableau qui enregistre les erreurs des champs*/
 const recordError = [];
 for (let i = 0; i < 7; i++) {
   recordError[i] = "";
 }
+/*initialisation du tableau qui enregistre le resultat des validations des champs*/
+let validationItem = [];
+for (let j = 0; j < 7; j++) {
+  validationItem[j] = false;
+}
+
 const messageError = [
   "#1:Entrer au moins 2 caractères.",
   "#2:Entrer au moins 2 caractères.",
@@ -93,6 +100,7 @@ function initModal() {
  * @returns null
  */
 function sendMessage() {
+  /*On garde seulement l'espace occupé par le formulaire*/
   let form = document.getElementsByName("reserve")[0];
   form.style.display = "none";
   let div = document.getElementById("message");
@@ -171,7 +179,7 @@ function validerEmail(email) {
 }
 
 /**
- * Pour le nombre de concours, une valeur numérique dois etre saisie.
+ * Pour le nombre de concours, une valeur numérique dois etre saisie obligatoirement.
  * @param {*} quantity
  * @returns false or true
  */
@@ -195,6 +203,7 @@ function validerBirthday(birthday) {
   let valid = true;
   const dateAujourdhui = new Date();
   const timestamp = dateAujourdhui.getTime();
+  /*conversion de birthday en objet date*/
   const birthdayObj = new Date(birthday);
 
   if (birthdayObj > dateAujourdhui || isNaN(birthdayObj)) {
@@ -230,7 +239,7 @@ function validerButtonsRadio(listeBtnRadio) {
 }
 
 /**
- * cette fonction valide le choix des conditions d'utilisations
+ * cette fonction valide le choix des conditions d'utilisations obligatoirement checkée
  * @param {*} conditionUtilisation
  * @returns false or true
  */
@@ -254,8 +263,6 @@ let form = document.querySelector("form");
 form.addEventListener("submit", (event) => {
   //avoid re-load web page
   event.preventDefault();
-
-  let validationItem = [];
 
   let balisePrenom = document.getElementById("first");
   let prenom = balisePrenom.value;
@@ -283,8 +290,8 @@ form.addEventListener("submit", (event) => {
   let conditionUtilisation = document.getElementById("checkbox1");
   validationItem[6] = validerButtonCondition(conditionUtilisation);
 
-  //ET logique entre toutes les validations
-  const formValid = validationItem.every((element) => element);
+  // & logique entre toutes les variables boolean de validations
+  const formValid = validationItem.every((element) => element === true);
 
   if (formValid) {
     //all field are correct
